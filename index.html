@@ -1,1 +1,201 @@
-# Lr-islamic-voice-
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LR Islamic AI Voice</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #07140f;
+      color: white;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 25px 15px;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #b8c8c0;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: #10231b;
+      border: 1px solid #254b3b;
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 8px;
+      font-weight: bold;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #365d4c;
+      background: #07140f;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 220px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #d4af37;
+      color: #07140f;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .stop {
+      background: #8b3030;
+      color: white;
+    }
+
+    .status {
+      text-align: center;
+      margin-top: 15px;
+      color: #c9d8d0;
+      min-height: 24px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #7f968a;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo">☪ LR ISLAMIC AI VOICE</div>
+    <div class="subtitle">Islamic Voice Studio</div>
+
+    <div class="card">
+
+      <label>📝 Your Islamic Script</label>
+
+      <textarea id="script" placeholder="এখানে আপনার Islamic script লিখুন...">আসসালামু আলাইকুম। আজ আমরা ইসলামের একটি গুরুত্বপূর্ণ বিষয় সম্পর্কে জানব।</textarea>
+
+      <label>🌐 Language</label>
+
+      <select id="language">
+        <option value="bn-BD">বাংলা</option>
+        <option value="en-US">English</option>
+        <option value="ar-SA">العربية</option>
+        <option value="hi-IN">हिन्दी</option>
+      </select>
+
+      <button onclick="generateVoice()">▶ Generate / Play Voice</button>
+
+      <button class="stop" onclick="stopVoice()">⏹ Stop Voice</button>
+
+      <div class="status" id="status">
+        Ready
+      </div>
+
+    </div>
+
+    <div class="footer">
+      LR STUDIO • Islamic AI Voice
+    </div>
+
+  </div>
+
+  <script>
+
+    let currentUtterance = null;
+
+    function generateVoice() {
+
+      const text = document.getElementById("script").value.trim();
+      const language = document.getElementById("language").value;
+      const status = document.getElementById("status");
+
+      if (!text) {
+        status.innerText = "⚠️ Please enter your script.";
+        return;
+      }
+
+      if (!("speechSynthesis" in window)) {
+        status.innerText = "❌ Your browser does not support voice.";
+        return;
+      }
+
+      speechSynthesis.cancel();
+
+      currentUtterance = new SpeechSynthesisUtterance(text);
+
+      currentUtterance.lang = language;
+      currentUtterance.rate = 0.90;
+      currentUtterance.pitch = 0.85;
+      currentUtterance.volume = 1;
+
+      currentUtterance.onstart = function() {
+        status.innerText = "🔊 Voice playing...";
+      };
+
+      currentUtterance.onend = function() {
+        status.innerText = "✅ Voice finished.";
+      };
+
+      currentUtterance.onerror = function() {
+        status.innerText = "❌ Voice could not be played.";
+      };
+
+      speechSynthesis.speak(currentUtterance);
+    }
+
+    function stopVoice() {
+
+      speechSynthesis.cancel();
+
+      document.getElementById("status").innerText =
+        "⏹ Voice stopped.";
+    }
+
+  </script>
+
+</body>
+</html>
